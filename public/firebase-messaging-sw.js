@@ -1,36 +1,27 @@
-import { initializeApp } from "firebase/app";
-import { getMessaging, getToken } from "firebase/messaging";
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js");
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCVAoitzm3bDPZ-fsYLzbsQ3prKvDBP_u0",
-    authDomain: "push-notification-fda0c.firebaseapp.com",
-    projectId: "push-notification-fda0c",
-    storageBucket: "push-notification-fda0c.appspot.com",
-    messagingSenderId: "418486799406",
-    appId: "1:418486799406:web:14413aa8906a82224de3bf"
+  apiKey: "AIzaSyAclMulFrV9fQT0twFeTaa_mq5t9rCprLQ",
+  authDomain: "react-push-notification-bd42e.firebaseapp.com",
+  projectId: "react-push-notification-bd42e",
+  storageBucket: "react-push-notification-bd42e.appspot.com",
+  messagingSenderId: "349836527765",
+  appId: "1:349836527765:web:8e70f41f8dbd388858b39c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
   };
 
-function requestPermission() {
-  console.log("Requesting permission...");
-  Notification.requestPermission().then((permission) => {
-    if (permission === "granted") {
-      console.log("Notification permission granted.");
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
-      getToken(messaging, {
-        vapidKey:
-          "BOA3xiYUM1w6VP4aEe2gzqWQCKlAq0dbFASd-OlR-4u4t29tZNt3MGmHRZPPT8Wohyp_6tmsx4G6qj5Uhwdhlwo",
-      }).then((currentToken) => {
-        if (currentToken) {
-          console.log("currentToken: ", currentToken);
-        } else {
-          console.log("Can not get token");
-        }
-      });
-    } else {
-      console.log("Do not have permission!");
-    }
-  });
-}
-
-requestPermission();
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
